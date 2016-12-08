@@ -1,0 +1,138 @@
+translation_unit:	  external_declaration
+			| translation_unit external_declaration
+
+external_declaration:	  function_definition
+                        | declaration 
+
+function_definition:	  type_specifier ID LPAREN param_list_opt RPAREN compound_stmt 
+
+                        | type_specifier STAR ID LPAREN param_list_opt RPAREN compound_stmt 
+declaration:    type_specifier STAR declarator SEMICOLON
+              | type_specifier declarator SEMICOLON
+
+declaration_list:          declaration
+                         | declaration_list declaration
+
+type_specifier:           INT
+
+declarator:               ID
+
+param_list_opt:
+                        | param_list
+
+param_list:
+                          param_list COMMA type_specifier declarator
+                        | param_list COMMA type_specifier STAR declarator
+                        | param_list COMMA type_specifier
+                        |  type_specifier declarator
+                        | type_specifier STAR declarator
+                        | type_specifier
+
+
+statement:                expr_stmt
+                        | compound_stmt
+                        | selection_stmt
+                        | iteration_stmt
+                        | jump_stmt
+                        | break_stmt
+                        | continue_stmt
+
+expr_stmt:                 SEMICOLON
+                        |  expression SEMICOLON
+
+compound_stmt:            LBRACE declaration_list_opt statement_list_opt RBRACE
+
+declaration_list_opt:
+                        | declaration_list
+
+statement_list_opt:
+                        | statement_list
+
+statement_list:         statement
+                        | statement_list statement
+
+break_stmt:               BREAK SEMICOLON
+
+continue_stmt:            CONTINUE SEMICOLON
+
+selection_stmt:
+                          IF LPAREN expression RPAREN statement ELSE statement
+
+iteration_stmt:           WHILE LPAREN expression RPAREN statement
+			| FOR LPAREN expr_opt SEMICOLON expr_opt SEMICOLON expr_opt RPAREN statement
+
+expr_opt:
+                        | expression
+
+jump_stmt:                RETURN SEMICOLON
+                        | RETURN expression SEMICOLON
+
+expression:               assignment_expression
+
+assignment_expression:    conditional_expression
+                        | lhs_expression ASSIGN assignment_expression
+
+
+conditional_expression:   logical_OR_expression
+                        | logical_OR_expression QUESTION_MARK expression COLON conditional_expression
+
+constant_expression:       conditional_expression
+
+logical_OR_expression:    logical_AND_expression
+                        | logical_OR_expression LOGICAL_OR logical_AND_expression
+
+logical_AND_expression:   inclusive_OR_expression
+                        | logical_AND_expression LOGICAL_AND inclusive_OR_expression
+
+inclusive_OR_expression:  exclusive_OR_expression
+                        | inclusive_OR_expression BITWISE_OR exclusive_OR_expression
+
+exclusive_OR_expression:  AND_expression
+                        | exclusive_OR_expression BITWISE_XOR AND_expression
+
+AND_expression:           equality_expression
+                        | AND_expression AMPERSAND equality_expression
+
+equality_expression:      relational_expression
+                        | equality_expression EQ relational_expression
+                        | equality_expression NEQ relational_expression
+
+relational_expression:    shift_expression
+                        | relational_expression LT shift_expression
+                        | relational_expression GT shift_expression
+                        | relational_expression LTE shift_expression
+                        | relational_expression GTE shift_expression
+shift_expression:         additive_expression
+                        | shift_expression LSHIFT additive_expression
+                        | shift_expression RSHIFT additive_expression
+
+additive_expression:      multiplicative_expression
+                        | additive_expression PLUS multiplicative_expression
+                        | additive_expression MINUS multiplicative_expression
+
+multiplicative_expression:  cast_expression
+                        | multiplicative_expression STAR cast_expression
+                        | multiplicative_expression DIV cast_expression
+                        | multiplicative_expression MOD cast_expression
+
+cast_expression:          unary_expression
+
+lhs_expression:           ID
+                        | STAR ID
+
+unary_expression:         postfix_expression
+                        | AMPERSAND primary_expression
+                        | STAR primary_expression
+                        | MINUS unary_expression
+                        | PLUS unary_expression
+                        | BITWISE_INVERT unary_expression
+                        | NOT unary_expression
+
+postfix_expression:       primary_expression
+
+primary_expression:       ID
+                        | constant
+                        | LPAREN expression RPAREN
+
+constant:                 NUMBER
+
